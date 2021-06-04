@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
 
 public interface UserService {
-    List<User> getAllUser();
+    List<User> getAllUser(String keyword);
     void saveUser(User user);
     void deleteUser(String username);
     User findByUsername(String username);

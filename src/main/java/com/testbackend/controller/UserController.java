@@ -3,6 +3,7 @@ package com.testbackend.controller;
 import com.testbackend.entity.User;
 import com.testbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +22,10 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/index")
-    public String viewUserPage(Model model){
-        List<User> users = userService.getAllUser();
+    public String viewUserPage(Model model, @Param("keyword") String keyword){
+        List<User> users = userService.getAllUser(keyword);
         model.addAttribute("users", users);
+        model.addAttribute("keyword", keyword);
         return "user/index";
     }
 
@@ -40,7 +42,7 @@ public class UserController {
         user.setPassword(encodedPassword);
         userService.saveUser(user);
         model.addAttribute("messages", "addSuccess");
-        return viewUserPage(model);
+        return viewUserPage(model, null);
     }
 
     @GetMapping("/edit")
@@ -57,14 +59,14 @@ public class UserController {
         user.setPassword(encodedPassword);
         userService.saveUser(user);
         model.addAttribute("messages", "editSuccess");
-        return viewUserPage(model);
+        return viewUserPage(model, null);
     }
 
     @GetMapping("/delete")
     public String procesDeleteUserPage(Model model, @RequestParam("id") String username){
         userService.deleteUser(username);
         model.addAttribute("messages","deleteSuccess");
-        return viewUserPage(model);
+        return viewUserPage(model, null);
     }
 
 }
